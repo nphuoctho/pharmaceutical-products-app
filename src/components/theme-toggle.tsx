@@ -1,4 +1,3 @@
-import { Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 type ThemeMode = 'light' | 'dark';

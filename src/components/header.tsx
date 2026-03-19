@@ -1,4 +1,3 @@
-import SearchInput from '@/components/ui/search-input';
 import { Link } from '@tanstack/react-router';
 import ThemeToggle from './theme-toggle';
 
@@ -15,8 +14,6 @@ export default function Header() {
 						Pharmaceutical Research
 					</Link>
 				</h2>
-
-				<SearchInput />
 
 				<ThemeToggle />
 			</nav>
