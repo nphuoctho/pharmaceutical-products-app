@@ -3,16 +3,17 @@
   "mode": "file-router",
   "typescript": true,
   "packageManager": "npm",
-  "includeExamples": true,
+  "includeExamples": false,
   "tailwind": true,
   "addOnOptions": {},
   "envVarValues": {},
-  "git": true,
+  "git": false,
   "routerOnly": false,
   "version": 1,
   "framework": "react",
   "chosenAddOns": [
     "biome",
+    "shadcn",
     "tanstack-query"
   ]
 }
