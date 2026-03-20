@@ -1,3 +1,5 @@
+import { Button } from '~/components/ui/button';
+
 export function meta() {
 	return [
 		{ title: 'Pharmaceutical Products' },
@@ -9,5 +11,11 @@ export function meta() {
 }
 
 export default function Home() {
-	return <h1>Hello</h1>;
+	return (
+		<>
+			<h1>Hello</h1>
+
+			<Button>Click Me</Button>
+		</>
+	);
 }
