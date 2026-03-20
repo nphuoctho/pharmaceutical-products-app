@@ -5,19 +5,26 @@ import { ThemeProvider } from '~/store/theme';
 import type { Route } from './+types/root';
 import './app.css';
 
+import ibmPlexSansUrl from '@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2?url';
+import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+
 const themeInitScript =
 	'!function(){try{const e=localStorage.getItem("theme"),t=window.matchMedia("(prefers-color-scheme: dark)").matches;"dark"===e||!e&&t?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}catch(e){}}();';
 
 export const links: Route.LinksFunction = () => [
-	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
 	{
-		rel: 'preconnect',
-		href: 'https://fonts.gstatic.com',
+		rel: 'preload',
+		href: ibmPlexSansUrl,
+		as: 'font',
+		type: 'font/woff2',
 		crossOrigin: 'anonymous'
 	},
 	{
-		rel: 'stylesheet',
-		href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap'
+		rel: 'preload',
+		href: interUrl,
+		as: 'font',
+		type: 'font/woff2',
+		crossOrigin: 'anonymous'
 	}
 ];
 
