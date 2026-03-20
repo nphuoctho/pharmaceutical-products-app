@@ -3,7 +3,7 @@ export function meta() {
 		{ title: 'Pharmaceutical Products' },
 		{
 			name: 'description',
-			content: 'Pharmaceutical Products app search engine'
+			content: 'Pharmaceutical products app search engine'
 		}
 	];
 }

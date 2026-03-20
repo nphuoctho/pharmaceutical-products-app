@@ -52,14 +52,16 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 	}
 
 	return (
-		<main className='pt-16 p-4 container mx-auto'>
-			<h1>{message}</h1>
-			<p>{details}</p>
-			{stack && (
-				<pre className='w-full p-4 overflow-x-auto'>
-					<code>{stack}</code>
-				</pre>
-			)}
+		<main className='min-h-screen flex items-center justify-center'>
+			<div className='flex flex-col gap-2 items-center'>
+				<h1 className='text-404'>{message}</h1>
+				<p>{details}</p>
+				{stack && (
+					<pre className='w-full p-4 overflow-x-auto'>
+						<code>{stack}</code>
+					</pre>
+				)}
+			</div>
 		</main>
 	);
 }
