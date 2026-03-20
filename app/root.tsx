@@ -1,7 +1,12 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
+import Header from '~/components/header';
+import { ThemeProvider } from '~/store/theme';
 import type { Route } from './+types/root';
 import './app.css';
+
+const themeInitScript =
+	'!function(){try{const e=localStorage.getItem("theme"),t=window.matchMedia("(prefers-color-scheme: dark)").matches;"dark"===e||!e&&t?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}catch(e){}}();';
 
 export const links: Route.LinksFunction = () => [
 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -18,17 +23,23 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang='en'>
+		<html lang='en' suppressHydrationWarning>
 			<head>
+				{/** biome-ignore lint/security/noDangerouslySetInnerHtml: Becuase theme initialization script runs before the browser paints. */}
+				<script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
 				<meta charSet='utf-8' />
 				<meta name='viewport' content='width=device-width, initial-scale=1' />
+				<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
 				<Meta />
 				<Links />
 			</head>
 			<body>
-				{children}
-				<ScrollRestoration />
-				<Scripts />
+				<ThemeProvider>
+					<Header />
+					{children}
+					<ScrollRestoration />
+					<Scripts />
+				</ThemeProvider>
 			</body>
 		</html>
 	);
@@ -54,7 +65,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 	return (
 		<main className='min-h-screen flex items-center justify-center'>
 			<div className='flex flex-col gap-2 items-center'>
-				<h1 className='text-404'>{message}</h1>
+				<h1 className='text-404 text-stroke'>{message}</h1>
 				<p>{details}</p>
 				{stack && (
 					<pre className='w-full p-4 overflow-x-auto'>
