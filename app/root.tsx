@@ -6,7 +6,6 @@ import type { Route } from './+types/root';
 import './app.css';
 
 import ibmPlexSansUrl from '@fontsource-variable/ibm-plex-sans/files/ibm-plex-sans-latin-wght-normal.woff2?url';
-import interUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
 const themeInitScript =
 	'!function(){try{const e=localStorage.getItem("theme"),t=window.matchMedia("(prefers-color-scheme: dark)").matches;"dark"===e||!e&&t?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark")}catch(e){}}();';
@@ -15,13 +14,6 @@ export const links: Route.LinksFunction = () => [
 	{
 		rel: 'preload',
 		href: ibmPlexSansUrl,
-		as: 'font',
-		type: 'font/woff2',
-		crossOrigin: 'anonymous'
-	},
-	{
-		rel: 'preload',
-		href: interUrl,
 		as: 'font',
 		type: 'font/woff2',
 		crossOrigin: 'anonymous'

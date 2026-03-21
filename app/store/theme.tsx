@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
 type Theme = 'light' | 'dark' | 'system';
 
@@ -9,11 +9,15 @@ interface ThemeContextValue {
 }
 
 const getResolvedTheme = (theme: Theme): 'light' | 'dark' => {
-	if (theme === 'system') {
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	}
+	if (theme !== 'system') return theme;
+	if (typeof window === 'undefined') return 'light';
 
-	return theme;
+	return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+};
+
+const getInitialTheme = (): Theme => {
+	if (typeof window === 'undefined') return 'system';
+	return (localStorage.getItem('theme') as Theme) ?? 'system';
 };
 
 export const ThemeContext = createContext<ThemeContextValue>({
@@ -24,13 +28,9 @@ export const ThemeContext = createContext<ThemeContextValue>({
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
 	const [theme, setThemeState] = useState<Theme>('system');
-	const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>('light');
-
-	useEffect(() => {
-		const stored = (localStorage.getItem('theme') as Theme) ?? 'system';
-		setThemeState(stored);
-		setResolvedTheme(getResolvedTheme(stored));
-	}, []);
+	const [resolvedTheme, setResolvedTheme] = useState<'light' | 'dark'>(() =>
+		typeof window === 'undefined' ? 'light' : getResolvedTheme(getInitialTheme())
+	);
 
 	useEffect(() => {
 		if (theme !== 'system') return;
@@ -46,7 +46,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 		return () => mql.removeEventListener('change', handler);
 	}, [theme]);
 
-	const setTheme = (newTheme: Theme) => {
+	const setTheme = useCallback((newTheme: Theme) => {
 		const resolved = getResolvedTheme(newTheme);
 
 		localStorage.setItem('theme', newTheme);
@@ -54,7 +54,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 		setThemeState(newTheme);
 		setResolvedTheme(resolved);
-	};
+	}, []);
 
-	return <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>{children}</ThemeContext.Provider>;
+	const value = useMemo(() => ({ theme, setTheme, resolvedTheme }), [theme, setTheme, resolvedTheme]);
+
+	return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }
