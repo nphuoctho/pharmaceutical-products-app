@@ -13,7 +13,7 @@ export function meta() {
 export default function Home() {
 	return (
 		<>
-			<h1>Hello</h1>
+			<h1>Nguyễn Phước Thọ</h1>
 
 			<Button>Click Me</Button>
 		</>
