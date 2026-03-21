@@ -7,7 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": true,
-		"includes": ["**", "!**/build", "!**/dist", "!**/.next", "!**/.sanity", "!**/coverage"]
+		"includes": ["**", "!**/build", "!**/dist", "!**/.next", "!**/.sanity", "!**/coverage", "!**/app/components/ui"]
 	},
 	"formatter": {
 		"enabled": true,
