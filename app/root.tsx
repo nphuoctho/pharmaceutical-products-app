@@ -35,7 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<body>
 				<ThemeProvider>
 					<Header />
-					<div className='mx-auto px-4 sm:px-5 md:px-6 max-w-7xl'>{children}</div>
+					<div className='mx-auto px-4 sm:px-5 md:px-6 max-w-7xl py-6 sm:py-8'>{children}</div>
 					<ScrollRestoration />
 					<Scripts />
 				</ThemeProvider>
