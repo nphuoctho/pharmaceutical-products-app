@@ -4,14 +4,19 @@ import { ThemeToggle } from '~/components/theme-toggle';
 
 const Header = () => {
 	return (
-		<header className='sticky flex border-b py-3 px-4 sm:px-10 tracking-wide z-50'>
-			<div className='flex flex-wrap items-center justify-between gap-4 mx-auto w-full'>
+		<header className='sticky top-0 z-50 border-b border-border/70 bg-background/82 px-4 py-3 backdrop-blur-xl sm:px-10'>
+			<div className='mx-auto flex w-full max-w-7xl flex-wrap items-center justify-between gap-4'>
 				<Link to='/'>
-					<div className='flex items-center space-x-4'>
-						<Image src='/favicon.svg' alt='logo' className='size-8 rounded-full' />
-						<h2 className='text-md font-semibold text-gray-900 dark:text-gray-100 font-heading'>
-							Pharmaceutical Research
-						</h2>
+					<div className='group flex items-center gap-3'>
+						<div className='flex size-10 items-center justify-center rounded-2xl border border-border/70 bg-card shadow-sm'>
+							<Image src='/favicon.svg' alt='logo' className='size-6 rounded-full' />
+						</div>
+						<div className='leading-tight'>
+							<p className='text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground'>Catalog</p>
+							<h2 className='font-heading text-base font-semibold text-foreground transition-colors group-hover:text-primary sm:text-lg'>
+								Pharmaceutical Research
+							</h2>
+						</div>
 					</div>
 				</Link>
 

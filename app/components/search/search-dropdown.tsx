@@ -2,20 +2,28 @@ import { cn } from '~/lib/utils';
 import type { AnySearchResult, CreatorResult, FileResult, PluginResult, SearchGroup } from './types';
 
 // Deterministic color from string for fallback avatars
+const colorCache = new Map<string, string>();
+
 function stringToColor(str: string): string {
+	if (colorCache.has(str)) {
+		return colorCache.get(str) as string;
+	}
+
 	const palette = ['#22c55e', '#3b82f6', '#ef4444', '#f97316', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16'];
 	let hash = 0;
 	for (let i = 0; i < str.length; i++) {
 		hash = str.charCodeAt(i) + ((hash << 5) - hash);
 	}
-	return palette[Math.abs(hash) % palette.length];
+	const color = palette[Math.abs(hash) % palette.length];
+	colorCache.set(str, color);
+	return color;
 }
 
 // ─── Badge ────────────────────────────────────────────────────────────────────
 
 function Badge({ label }: { label: string }) {
 	return (
-		<span className='shrink-0 rounded border border-border px-1.5 py-0.5 text-[11px] leading-none text-muted-foreground'>
+		<span className='shrink-0 rounded-full border border-border/80 bg-muted/50 px-2 py-1 text-[11px] leading-none text-muted-foreground'>
 			{label}
 		</span>
 	);
@@ -28,10 +36,10 @@ function FileItem({ result, onSelect }: { result: FileResult; onSelect: (r: AnyS
 		<button
 			type='button'
 			onClick={() => onSelect(result)}
-			className='flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none'
+			className='flex min-h-12 w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-muted/70 focus-visible:bg-muted/70 focus-visible:outline-none'
 		>
 			{/* Thumbnail */}
-			<div className='size-[60px] shrink-0 overflow-hidden rounded-md bg-muted'>
+			<div className='size-15 shrink-0 overflow-hidden rounded-md bg-muted'>
 				{result.thumbnailUrl ? (
 					<img src={result.thumbnailUrl} alt={result.title} className='size-full object-cover' />
 				) : (
@@ -71,7 +79,7 @@ function PluginItem({ result, onSelect }: { result: PluginResult; onSelect: (r: 
 		<button
 			type='button'
 			onClick={() => onSelect(result)}
-			className='flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none'
+			className='flex min-h-12 w-full items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-muted/70 focus-visible:bg-muted/70 focus-visible:outline-none'
 		>
 			{/* Icon circle */}
 			<div
@@ -104,7 +112,7 @@ function CreatorRow({ results, onSelect }: { results: CreatorResult[]; onSelect:
 						key={creator.id}
 						type='button'
 						onClick={() => onSelect(creator)}
-						className='flex min-w-[64px] flex-col items-center gap-1 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:opacity-80'
+						className='flex min-w-16 flex-col items-center gap-1 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:opacity-80'
 					>
 						<div
 							className='flex size-12 items-center justify-center rounded-full text-base font-bold text-white'
@@ -152,32 +160,81 @@ function GroupSection({ group, onSelect }: { group: SearchGroup; onSelect: (r: A
 interface SearchDropdownProps {
 	groups: SearchGroup[];
 	onSelect: (result: AnySearchResult) => void;
+	loading?: boolean;
+	isError?: boolean;
+	query?: string;
 	className?: string;
 }
 
-export function SearchDropdown({ groups, onSelect, className }: SearchDropdownProps) {
+function DropdownStatus({ title, description }: { title: string; description: string }) {
+	return (
+		<div className='px-5 py-8 text-center'>
+			<p className='text-sm font-medium text-foreground'>{title}</p>
+			<p className='mt-1 text-xs text-muted-foreground'>{description}</p>
+		</div>
+	);
+}
+
+function DropdownLoadingState() {
+	const loadingKeys = ['loading-a', 'loading-b', 'loading-c'];
+
+	return (
+		<div className='space-y-2 p-3'>
+			{loadingKeys.map(key => (
+				<div key={key} className='h-14 animate-pulse rounded-2xl bg-muted/60' />
+			))}
+		</div>
+	);
+}
+
+export function SearchDropdown({
+	groups,
+	onSelect,
+	loading = false,
+	isError = false,
+	query = '',
+	className
+}: SearchDropdownProps) {
+	const totalResults = groups.reduce((count, group) => count + group.results.length, 0);
+	const trimmedQuery = query.trim();
+
 	return (
 		<div
 			role='listbox'
 			className={cn(
 				// Position
-				'absolute left-0 right-0 top-[calc(100%+4px)] z-50',
+				'absolute left-0 right-0 top-[calc(100%+8px)] z-50',
 				// Appearance
-				'overflow-hidden rounded-2xl border border-border bg-background shadow-lg shadow-black/10',
+				'surface-card overflow-hidden rounded-3xl',
 				// Scroll
-				'max-h-[420px] overflow-y-auto',
+				'max-h-105 overflow-y-auto',
 				// Animation
 				'animate-in fade-in-0 slide-in-from-top-2 duration-150',
 				className
 			)}
 		>
-			{groups.map((group, i) => (
-				<div key={group.label}>
-					<GroupSection group={group} onSelect={onSelect} />
-					{/* Divider between groups */}
-					{i < groups.length - 1 && <div className='mx-4 border-t border-border' />}
-				</div>
-			))}
+			{loading ? <DropdownLoadingState /> : null}
+
+			{!loading && isError ? (
+				<DropdownStatus title='Unable to fetch results' description='Please check your connection and try again.' />
+			) : null}
+
+			{!loading && !isError && totalResults === 0 ? (
+				<DropdownStatus
+					title='No matching results'
+					description={trimmedQuery ? `No products found for "${trimmedQuery}".` : 'Try another keyword.'}
+				/>
+			) : null}
+
+			{!loading && !isError && totalResults > 0
+				? groups.map((group, i) => (
+						<div key={group.label}>
+							<GroupSection group={group} onSelect={onSelect} />
+							{/* Divider between groups */}
+							{i < groups.length - 1 && <div className='mx-4 border-t border-border' />}
+						</div>
+					))
+				: null}
 		</div>
 	);
 }

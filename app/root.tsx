@@ -1,6 +1,7 @@
 import { isRouteErrorResponse, Links, Meta, Outlet, Scripts, ScrollRestoration } from 'react-router';
 
-import Header from '~/components/header';
+import { QueryProvider } from '~/components/providers/query-provider';
+import { ThemeToggle } from '~/components/theme-toggle';
 import { ThemeProvider } from '~/store/theme';
 import type { Route } from './+types/root';
 import './app.css';
@@ -33,12 +34,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				<Links />
 			</head>
 			<body>
-				<ThemeProvider>
-					<Header />
-					<div className='mx-auto px-4 sm:px-5 md:px-6 max-w-7xl py-6 sm:py-8'>{children}</div>
-					<ScrollRestoration />
-					<Scripts />
-				</ThemeProvider>
+				<QueryProvider>
+					<ThemeProvider>
+						<div className='fixed right-4 top-4 z-50 sm:right-6 sm:top-6'>
+							<ThemeToggle />
+						</div>
+						<div className='mx-auto px-4 sm:px-5 md:px-6 max-w-7xl py-6 sm:py-8'>{children}</div>
+						<ScrollRestoration />
+						<Scripts />
+					</ThemeProvider>
+				</QueryProvider>
 			</body>
 		</html>
 	);
