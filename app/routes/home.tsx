@@ -31,10 +31,10 @@ export default function Home() {
 	}, []);
 
 	return (
-		<main className='relative flex min-h-[100svh] items-center px-3 py-10 sm:px-4'>
+		<main className='relative flex min-h-svh items-center px-3 py-10 sm:px-4'>
 			<div
 				aria-hidden='true'
-				className='soft-grid pointer-events-none absolute inset-x-0 top-8 mx-auto h-[32rem] w-full max-w-6xl'
+				className='soft-grid pointer-events-none absolute inset-x-0 top-8 mx-auto h-128 w-full max-w-6xl'
 			/>
 
 			<section className='motion-enter relative mx-auto w-full max-w-4xl'>

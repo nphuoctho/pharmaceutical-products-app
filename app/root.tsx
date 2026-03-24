@@ -39,7 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 						<div className='fixed right-4 top-4 z-50 sm:right-6 sm:top-6'>
 							<ThemeToggle />
 						</div>
-						<div className='mx-auto px-4 sm:px-5 md:px-6 max-w-7xl py-6 sm:py-8'>{children}</div>
+						<div className='mx-auto max-w-7xl px-4 sm:px-5 md:px-6'>{children}</div>
 						<ScrollRestoration />
 						<Scripts />
 					</ThemeProvider>

@@ -137,9 +137,9 @@ export const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(function Se
 			{/* Input wrapper */}
 			<div
 				className={cn(
-					'surface-card flex min-h-14 items-center gap-2 rounded-full px-3 py-1.5 sm:px-4',
+					'surface-card flex h-14 items-center gap-2 rounded-full px-3 sm:px-4',
 					'transition-all duration-200',
-					isFocused ? 'border-primary/65 ring-4 ring-primary/12' : 'hover:border-primary/45'
+					isFocused ? 'border-primary/65 ring-2 ring-primary/18' : 'ring-2 ring-transparent hover:border-primary/45'
 				)}
 			>
 				<label htmlFor={inputId} className='flex min-w-0 flex-1 cursor-text items-center gap-2'>
@@ -163,7 +163,7 @@ export const SearchBar = forwardRef<SearchBarHandle, SearchBarProps>(function Se
 						onKeyDown={handleKeyDown}
 						onFocus={handleFocus}
 						placeholder={placeholder}
-						className='flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground sm:text-base'
+						className='flex-1 bg-transparent text-sm leading-5 text-foreground outline-none placeholder:text-muted-foreground sm:text-base'
 					/>
 				</label>
 
